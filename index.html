@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>PICO - Investissement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #f0f2f5;
+            padding-bottom: 70px;
+        }
+
+        .app {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        /* Header avec logo PICO */
+        .header {
+            background: linear-gradient(135deg, #ff8c00, #ff5e00);
+            color: white;
+            padding: 20px;
+            border-radius: 0 0 25px 25px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header h1 span {
+            font-size: 32px;
+        }
+
+        .user-greeting {
+            margin-top: 15px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .user-greeting strong {
+            font-size: 18px;
+        }
+
+        /* Carte solde */
+        .balance-card {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 15px;
+            margin-top: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .balance-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .balance-amount {
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .recharge-btn {
+            background: white;
+            color: #ff5e00;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-top: 10px;
+            width: 100%;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Menu principal 4 options */
+        .main-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            color: #ff5e00;
+            border-bottom: 3px solid #ff5e00;
+        }
+
+        /* Contenu des onglets */
+        .tab-content {
+            display: none;
+            padding: 20px 15px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cartes VIP */
+        .vip-card {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            transition: transform 0.2s;
+        }
+
+        .vip-card.locked {
+            opacity: 0.6;
+            background: #f9f9f9;
+        }
+
+        .vip-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .vip-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff8c00, #ff5e00);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .vip-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .vip-price {
+            font-size: 14px;
+            color: #ff5e00;
+            font-weight: bold;
+        }
+
+        .vip-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 13px;
+            background: #f8f9fc;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .invest-action-btn {
+            background: linear-gradient(135deg, #ff8c00, #ff5e00);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .invest-action-btn.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Tâches / Parrainage */
+        .referral-card {
+            background: linear-gradient(135deg, #ff8c00, #ff5e00);
+            color: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .invite-code {
+            background: white;
+            color: #ff5e00;
+            padding: 10px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin: 10px 0;
+        }
+
+        .level-box {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .level-item {
+            flex: 1;
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .level-percent {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* Compte */
+        .account-info {
+            background: #f8f9fc;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .telegram-links {
+            background: #f8f9fc;
+            border-radius: 20px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .telegram-btn {
+            display: block;
+            background: #0088cc;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 30px;
+            text-decoration: none;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 30px;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        /* Formulaire inscription/connexion */
+        .auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ff8c00, #ff5e00);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 30px;
+            padding: 30px 20px;
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .auth-card h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ff5e00;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 14px;
+        }
+
+        .auth-btn {
+            background: linear-gradient(135deg, #ff8c00, #ff5e00);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .switch-auth {
+            text-align: center;
+            margin-top: 15px;
+            color: #ff5e00;
+            cursor: pointer;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            border-top: 1px solid #eee;
+            max-width: 450px;
+            margin: 0 auto;
+            z-index: 10;
+        }
+
+        .bottom-nav-item {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            cursor: pointer;
+        }
+
+        .bottom-nav-item.active {
+            color: #ff5e00;
+        }
+
+        .bottom-nav-icon {
+            font-size: 22px;
+            display: block;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 30px;
+            z-index: 200;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+    <!-- Contenu principal qui change selon connexion -->
+</div>
+
+<script>
+    // ========== STOCKAGE LOCAL ==========
+    let users = JSON.parse(localStorage.getItem('pico_users')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('pico_currentUser')) || null;
+
+    // ========== NUMERO WAVE ==========
+    const WAVE_NUMBER = "766297256";
+
+    // ========== LIENS TELEGRAM ==========
+    const TELEGRAM_SUPPORT = "https://t.me/pico3215";
+    const TELEGRAM_CHANNEL = "https://t.me/+FTSLhDhRHtVlNmJk";
+
+    // ========== FONCTIONS UTILES ==========
+    function showToast(msg) {
+        let toast = document.getElementById('toast');
+        if(!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 2000);
+    }
+
+    function generateInviteCode() {
+        return Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+
+    function saveUsers() {
+        localStorage.setItem('pico_users', JSON.stringify(users));
+    }
+
+    function saveCurrentUser() {
+        localStorage.setItem('pico_currentUser', JSON.stringify(currentUser));
+    }
+
+    // ========== INSCRIPTION ==========
+    function register(name, phone, password, referralCode) {
+        // Vérifier format téléphone
+        let cleanPhone = phone.replace(/[^0-9]/g, '');
+        if(cleanPhone.length === 12 && cleanPhone.startsWith('221')) {
+            cleanPhone = cleanPhone.substring(3);
+        }
+        if(cleanPhone.length !== 9 && cleanPhone.length !== 8) {
+            showToast('Numéro invalide (ex: 766297256)');
+            return false;
+        }
+        
+        // Vérifier si phone existe déjà
+        if(users.find(u => u.phone === cleanPhone)) {
+            showToast('Ce numéro est déjà inscrit');
+            return false;
+        }
+
+        // Chercher le parrain
+        let referrer = null;
+        if(referralCode) {
+            referrer = users.find(u => u.inviteCode === referralCode.toUpperCase());
+        }
+
+        const newUser = {
+            id: Date.now(),
+            name: name,
+            phone: cleanPhone,
+            password: password,
+            balance: 1000, // Bonus de 1000 FCFA
+            inviteCode: generateInviteCode(),
+            referredBy: referrer ? referrer.phone : null,
+            investments: [],
+            totalWithdrawn: 0,
+            createdAt: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        saveUsers();
+
+        // Bonus au parrain (niveau 1: 30%, niveau 2: 3%, niveau 3: 1%)
+        if(referrer) {
+            let level1Bonus = 300;
+            referrer.balance += level1Bonus;
+            
+            let referrer2 = users.find(u => u.phone === referrer.referredBy);
+            if(referrer2) {
+                let level2Bonus = 30;
+                referrer2.balance += level2Bonus;
+                
+                let referrer3 = users.find(u => u.phone === referrer2.referredBy);
+                if(referrer3) {
+                    let level3Bonus = 10;
+                    referrer3.balance += level3Bonus;
+                    users = users.map(u => u.phone === referrer3.phone ? referrer3 : u);
+                }
+                users = users.map(u => u.phone === referrer2.phone ? referrer2 : u);
+            }
+            users = users.map(u => u.phone === referrer.phone ? referrer : u);
+            saveUsers();
+        }
+
+        currentUser = newUser;
+        saveCurrentUser();
+        showToast(`Bienvenue ${name}! Bonus 1000 FCFA offert!`);
+        return true;
+    }
+
+    // ========== CONNEXION ==========
+    function login(phone, password) {
+        let cleanPhone = phone.replace(/[^0-9]/g, '');
+        if(cleanPhone.length === 12 && cleanPhone.startsWith('221')) {
+            cleanPhone = cleanPhone.substring(3);
+        }
+        const user = users.find(u => u.phone === cleanPhone && u.password === password);
+        if(user) {
+            currentUser = user;
+            saveCurrentUser();
+            showToast(`Bon retour ${user.name}`);
+            return true;
+        }
+        showToast('Numéro ou mot de passe incorrect');
+        return false;
+    }
+
+    // ========== DÉCONNEXION ==========
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('pico_currentUser');
+        showToast('Déconnecté');
+        render();
+    }
+
+    // ========== ACHETER UN VIP ==========
+    const vips = [
+        { level: 1, name: "VIP 1", price: 2500, days: 65, daily: 500, total: 32000, icon: "⭐" },
+        { level: 2, name: "VIP 2", price: 6000, days: 65, daily: 1500, total: 97500, icon: "⭐⭐" },
+        { level: 3, name: "VIP 3", price: 10000, days: 65, daily: 2500, total: 162000, icon: "⭐⭐⭐" },
+        { level: 4, name: "VIP 4", price: 15000, days: 65, daily: 3750, total: 243750, icon: "⭐⭐⭐⭐" },
+        { level: 5, name: "VIP 5", price: 25000, days: 65, daily: 6250, total: 406250, icon: "⭐⭐⭐⭐⭐" },
+        { level: 6, name: "VIP 6", price: 45000, days: 65, daily: 11250, total: 731250, icon: "👑" }
+    ];
+
+    function buyVip(vip) {
+        if(!currentUser) return;
+        if(currentUser.balance < vip.price) {
+            showToast(`Solde insuffisant! Il vous faut ${vip.price.toLocaleString()} FCFA`);
+            return;
+        }
+
+        currentUser.balance -= vip.price;
+        
+        const startDate = new Date();
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + vip.days);
+        
+        const investment = {
+            pack: vip.name,
+            amount: vip.price,
+            dailyEarning: vip.daily,
+            totalReturn: vip.total,
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
+            active: true
+        };
+        
+        currentUser.investments.push(investment);
+        
+        users = users.map(u => u.phone === currentUser.phone ? currentUser : u);
+        saveUsers();
+        saveCurrentUser();
+        
+        showToast(`Félicitations! Vous avez investi dans ${vip.name}`);
+        render();
+    }
+
+    // ========== DÉPÔT WAVE ==========
+    function deposit() {
+        let amount = prompt("Montant à déposer (minimum 500 FCFA):");
+        amount = parseInt(amount);
+        if(amount && amount >= 500) {
+            window.location.href = `wave://pay?amount=${amount}&merchant=${WAVE_NUMBER}`;
+            showToast("Redirection vers Wave...");
+        } else {
+            showToast("Montant minimum 500 FCFA");
+        }
+    }
+
+    // ========== RETRAIT ==========
+    function withdraw() {
+        let amount = prompt("Montant à retirer (minimum 1000 FCFA):");
+        amount = parseInt(amount);
+        if(amount && amount >= 1000 && currentUser.balance >= amount) {
+            currentUser.balance -= amount;
+            currentUser.totalWithdrawn += amount;
+            users = users.map(u => u.phone === currentUser.phone ? currentUser : u);
+            saveUsers();
+            saveCurrentUser();
+            showToast(`Demande de retrait de ${amount} FCFA envoyée!`);
+            render();
+        } else if(amount > currentUser.balance) {
+            showToast("Solde insuffisant");
+        } else {
+            showToast("Montant minimum 1000 FCFA");
+        }
+    }
+
+    // ========== AFFICHAGE DES ONGLETS ==========
+    let currentTab = 'home';
+
+    function setTab(tab) {
+        currentTab = tab;
+        render();
+    }
+
+    function renderHome() {
+        const activeInvestments = currentUser.investments.filter(i => i.active).length;
+        return `
+            <div class="header">
+                <h1><span>🐧</span> PICO</h1>
+                <div class="user-greeting">
+                    Bonjour <strong>${currentUser.name}</strong><br>
+                    📱 ${currentUser.phone}
+                </div>
+                <div class="balance-card">
+                    <div class="balance-label">Solde disponible</div>
+                    <div class="balance-amount">${currentUser.balance.toLocaleString()} FCFA</div>
+                    <button class="recharge-btn" onclick="deposit()">💰 Recharger avec Wave</button>
+                </div>
+            </div>
+            <div class="main-tabs">
+                <div class="tab ${currentTab === 'home' ? 'active' : ''}" onclick="setTab('home')">🏠 Accueil</div>
+                <div class="tab ${currentTab === 'tasks' ? 'active' : ''}" onclick="setTab('tasks')">📋 Tâches</div>
+                <div class="tab ${currentTab === 'invest' ? 'active' : ''}" onclick="setTab('invest')">📈 Invest</div>
+                <div class="tab ${currentTab === 'account' ? 'active' : ''}" onclick="setTab('account')">👤 Compte</div>
+            </div>
+            <div class="tab-content active">
+                <div style="background:#f0f2f5; border-radius:20px; padding:15px; margin-bottom:15px;">
+                    <h3>📊 Vos investissements actifs</h3>
+                    <p style="font-size:24px; font-weight:bold;">${activeInvestments}</p>
+                    <p style="color:#ff5e00;">Gagnez chaque jour sans risque!</p>
+                </div>
+                <div style="background:linear-gradient(135deg,#ff8c00,#ff5e00); border-radius:20px; padding:20px; color:white;">
+                    <h3>🎁 Code de parrainage</h3>
+                    <div class="invite-code">${currentUser.inviteCode}</div>
+                    <p>Parrainez vos amis et gagnez 30% sur leurs dépôts!</p>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderTasks() {
+        return `
+            <div class="main-tabs">
+                <div class="tab ${currentTab === 'home' ? 'active' : ''}" onclick="setTab('home')">🏠 Accueil</div>
+                <div class="tab ${currentTab === 'tasks' ? 'active' : ''}" onclick="setTab('tasks')">📋 Tâches</div>
+                <div class="tab ${currentTab === 'invest' ? 'active' : ''}" onclick="setTab('invest')">📈 Invest</div>
+                <div class="tab ${currentTab === 'account' ? 'active' : ''}" onclick="setTab('account')">👤 Compte</div>
+            </div>
+            <div class="tab-content active">
+                <div class="referral-card">
+                    <h3>🤝 Système de parrainage</h3>
+                    <p>Votre code d'invitation</p>
+                    <div class="invite-code">${currentUser.inviteCode}</div>
+                    <div class="level-box">
+                        <div class="level-item">
+                            <div class="level-percent">30%</div>
+                            <div>Niveau 1</div>
+                        </div>
+                        <div class="level-item">
+                            <div class="level-percent">3%</div>
+                            <div>Niveau 2</div>
+                        </div>
+                        <div class="level-item">
+                            <div class="level-percent">1%</div>
+                            <div>Niveau 3</div>
+                        </div>
+                    </div>
+                    <p style="margin-top:10px;">Gagnez des commissions sur vos filleuls!</p>
+                </div>
+                <div style="background:#f8f9fc; border-radius:20px; padding:15px;">
+                    <h3>📋 Comment gagner?</h3>
+                    <p>1. Invitez vos amis avec votre code</p>
+                    <p>2. Ils investissent et vous gagnez</p>
+                    <p>3. Vos revenus sont automatiques</p>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderInvest() {
+        let vipsHtml = '';
+        for(let vip of vips) {
+            vipsHtml += `
+                <div class="vip-card">
+                    <div class="vip-header">
+                        <div class="vip-icon">${vip.icon}</div>
+                        <div>
+                            <div class="vip-name">${vip.name}</div>
+                            <div class="vip-price">${vip.price.toLocaleString()} FCFA</div>
+                        </div>
+                    </div>
+                    <div class="vip-details">
+                        <div>📅 Durée: ${vip.days} jours</div>
+                        <div>📈 Gain/jour: ${vip.daily.toLocaleString()} FCFA</div>
+                        <div>🎯 Revenu total: ${vip.total.toLocaleString()} FCFA</div>
+                        <div>💰 ROI: +${Math.round((vip.total/vip.price)*100-100)}%</div>
+                    </div>
+                    <button class="invest-action-btn" onclick='buyVip(${JSON.stringify(vip)})'>
+                        Investir maintenant →
+                    </button>
+                </div>
+            `;
+        }
+        return `
+            <div class="main-tabs">
+                <div class="tab ${currentTab === 'home' ? 'active' : ''}" onclick="setTab('home')">🏠 Accueil</div>
+                <div class="tab ${currentTab === 'tasks' ? 'active' : ''}" onclick="setTab('tasks')">📋 Tâches</div>
+                <div class="tab ${currentTab === 'invest' ? 'active' : ''}" onclick="setTab('invest')">📈 Invest</div>
+                <div class="tab ${currentTab === 'account' ? 'active' : ''}" onclick="setTab('account')">👤 Compte</div>
+            </div>
+            <div class="tab-content active">
+                <h3 style="margin-bottom:15px;">📦 Choisissez votre pack VIP</h3>
+                ${vipsHtml}
+            </div>
+        `;
+    }
+
+    function renderAccount() {
+        return `
+            <div class="main-tabs">
+                <div class="tab ${currentTab === 'home' ? 'active' : ''}" onclick="setTab('home')">🏠 Accueil</div>
+                <div class="tab ${currentTab === 'tasks' ? 'active' : ''}" onclick="setTab('tasks')">📋 Tâches</div>
+                <div class="tab ${currentTab === 'invest' ? 'active' : ''}" onclick="setTab('invest')">📈 Invest</div>
+                <div class="tab ${currentTab === 'account' ? 'active' : ''}" onclick="setTab('account')">👤 Compte</div>
+            </div>
+            <div class="tab-content active">
+                <div class="account-info">
+                    <div class="info-row">
+                        <span>👤 Nom</span>
+                        <span><strong>${currentUser.name}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span>📱 Téléphone</span>
+                        <span><strong>${currentUser.phone}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span>💰 Solde</span>
+                        <span><strong style="color:#ff5e00;">${currentUser.balance.toLocaleString()} FCFA</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span>🎁 Code parrainage</span>
+                        <span><strong>${currentUser.inviteCode}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span>💸 Total retiré</span>
+                        <span>${currentUser.totalWithdrawn.toLocaleString()} FCFA</span>
+                    </div>
+                </div>
+                
+                <div style="display:flex; gap:10px; margin-bottom:20px;">
+                    <button class="recharge-btn" style="background:#ff5e00; color:white;" onclick="deposit()">💰 Dépôt Wave</button>
+                    <button class="recharge-btn" style="background:#28a745; color:white;" onclick="withdraw()">💸 Retrait</button>
+                </div>
+
+                <div class="telegram-links">
+                    <h3>📢 Service Client</h3>
+                    <a href="${TELEGRAM_SUPPORT}" class="telegram-btn" target="_blank">💬 Support Telegram</a>
+                    <a href="${TELEGRAM_CHANNEL}" class="telegram-btn" style="background:#26a5e4;" target="_blank">📢 Chaîne Telegram</a>
+                </div>
+
+                <button class="logout-btn" onclick="logout()">🚪 Déconnexion</button>
+            </div>
+        `;
+    }
+
+    // ========== AFFICHAGE PRINCIPAL ==========
+    function render() {
+        const app = document.getElementById('app');
+        if(!currentUser) {
+            app.innerHTML = `
+                <div class="auth-screen" id="authScreen">
+                    <div class="auth-card">
+                        <h2>🐧 PICO</h2>
+                        <div id="authForm">
+                            <input type="text" id="authName" placeholder="Nom complet" class="auth-input">
+                            <input type="tel" id="authPhone" placeholder="Numéro téléphone (ex: 766297256)" class="auth-input">
+                            <input type="password" id="authPassword" placeholder="Mot de passe" class="auth-input">
+                            <input type="text" id="authReferral" placeholder="Code invitation (optionnel)" class="auth-input">
+                            <button class="auth-btn" onclick="handleRegister()">S'inscrire + 1000 FCFA bonus</button>
+                        </div>
+                        <div class="switch-auth" onclick="switchToLogin()">Déjà un compte? Se connecter</div>
+                    </div>
+                </div>
+            `;
+            window.authMode = 'register';
+            return;
+        }
+
+        let content = '';
+        if(currentTab === 'home') content = renderHome();
+        else if(currentTab === 'tasks') content = renderTasks();
+        else if(currentTab === 'invest') content = renderInvest();
+        else if(currentTab === 'account') content = renderAccount();
+        
+        app.innerHTML = content + `
+            <div class="bottom-nav">
+                <div class="bottom-nav-item ${currentTab === 'home' ? 'active' : ''}" onclick="setTab('home')">
+                    <span class="bottom-nav-icon">🏠</span>
+                    <span>Accueil</span>
+                </div>
+                <div class="bottom-nav-item ${currentTab === 'tasks' ? 'active' : ''}" onclick="setTab('tasks')">
+                    <span class="bottom-nav-icon">📋</span>
+                    <span>Tâches</span>
+                </div>
+                <div class="bottom-nav-item ${currentTab === 'invest' ? 'active' : ''}" onclick="setTab('invest')">
+                    <span class="bottom-nav-icon">📈</span>
+                    <span>Invest</span>
+                </div>
+                <div class="bottom-nav-item ${currentTab === 'account' ? 'active' : ''}" onclick="setTab('account')">
+                    <span class="bottom-nav-icon">👤</span>
+                    <span>Compte</span>
+                </div>
+            </div>
+        `;
+    }
+
+    // ========== GESTION AUTH ==========
+    window.handleRegister = function() {
+        const name = document.getElementById('authName')?.value;
+        const phone = document.getElementById('authPhone')?.value;
+        const password = document.getElementById('authPassword')?.value;
+        const referral = document.getElementById('authReferral')?.value;
+        if(!name || !phone || !password) {
+            showToast('Veuillez remplir tous les champs');
+            return;
+        }
+        if(register(name, phone, password, referral)) {
+            render();
+        }
+    };
+
+    window.handleLogin = function() {
+        const phone = document.getElementById('loginPhone')?.value;
+        const password = document.getElementById('loginPassword')?.value;
+        if(!phone || !password) {
+            showToast('Veuillez remplir tous les champs');
+            return;
+        }
+        if(login(phone, password)) {
+            render();
+        }
+    };
+
+    window.switchToLogin = function() {
+        const authForm = document.getElementById('authForm');
+        if(authForm) {
+            authForm.innerHTML = `
+                <input type="tel" id="loginPhone" placeholder="Numéro téléphone" class="auth-input">
+                <input type="password" id="loginPassword" placeholder="Mot de passe" class="auth-input">
+                <button class="auth-btn" onclick="handleLogin()">Se connecter</button>
+            `;
+            document.querySelector('.switch-auth').innerHTML = 'Pas de compte? S\'inscrire + 1000 FCFA';
+            document.querySelector('.switch-auth').onclick = () => location.reload();
+        }
+    };
+
+    window.setTab = setTab;
+    window.buyVip = buyVip;
+    window.deposit = deposit;
+    window.withdraw = withdraw;
+    window.logout = logout;
+
+    render();
+</script>
+</body>
+</html>
