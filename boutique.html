@@ -1,0 +1,214 @@
+jfjhvd-75/?638
+
+
+
+jj
+vdb364766,)!(<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SHADOW STORE | Détail produit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        :root {
+            --vert: #00853E;
+            --jaune: #FCD116;
+            --rouge: #E31B23;
+        }
+
+        .navbar {
+            background: rgba(0,0,0,0.95);
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--jaune);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--jaune);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links a:hover {
+            color: var(--jaune);
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .product-detail {
+            background: rgba(20,20,20,0.95);
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            border: 2px solid var(--jaune);
+            box-shadow: 0 0 40px rgba(0,133,62,0.3);
+        }
+
+        .product-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: var(--jaune);
+        }
+
+        .product-name {
+            font-size: 2rem;
+            margin: 20px 0;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            color: var(--vert);
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .btn-pay {
+            background: linear-gradient(135deg, var(--vert), var(--jaune));
+            color: #000;
+            font-weight: bold;
+            font-size: 1.3rem;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 30px 0;
+            transition: 0.3s;
+        }
+
+        .btn-pay:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(252,209,22,0.5);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: var(--jaune);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .product-detail { padding: 25px; }
+            .product-name { font-size: 1.5rem; }
+            .btn-pay { font-size: 1rem; padding: 12px 30px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">SHADOW STORE</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="catalogue.html">Catalogue</a></li>
+                <li><a href="admin.html">Admin</a></li>
+            </ul>
+            <div class="menu-toggle"><i class="fas fa-bars"></i></div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="product-detail" id="productDetail">
+            <!-- Chargé par JS -->
+        </div>
+    </div>
+
+    <script>
+        const produits = [
+            { id: 1, nom: "🤖 Bug Bot", prix: 1000, icone: "fa-bug" },
+            { id: 2, nom: "📦 APK Bann", prix: 1000, icone: "fa-file" },
+            { id: 3, nom: "🔍 Check Bann", prix: 1000, icone: "fa-search" },
+            { id: 4, nom: "🤖 Bot WhatsApp", prix: 1000, icone: "fa-whatsapp" },
+            { id: 5, nom: "🤖 Bot Telegram", prix: 1000, icone: "fa-telegram" },
+            { id: 6, nom: "📱 Compte Telegram", prix: 1500, icone: "fa-telegram" },
+            { id: 7, nom: "🛡️ Support Bann", prix: 1000, icone: "fa-shield-alt" },
+            { id: 8, nom: "📱 APK Multiple Compte", prix: 1000, icone: "fa-users" },
+            { id: 9, nom: "📖 Méthode Bann", prix: 500, icone: "fa-book" },
+            { id: 10, nom: "🎬 Vidéo Créer Bot WhatsApp", prix: 1500, icone: "fa-video" },
+            { id: 11, nom: "💻 Formation Dev", prix: 2000, icone: "fa-code" },
+            { id: 12, nom: "📚 Formation Tech", prix: 1500, icone: "fa-laptop-code" }
+            (id.  13 nim.   (☹️boutiqyees trd .com priv 459 icon dev shadiz techome
+        ];
+
+        let produit = null;
+
+        const saved = localStorage.getItem('selectedProduct');
+        if (saved) {
+            produit = JSON.parse(saved);
+        } else {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = parseInt(urlParams.get('id'));
+            produit = produits.find(p => p.id === id);
+        }
+
+        if (!produit) produit = produits[0];
+
+        document.getElementById('productDetail').innerHTML = `
+            <div class="product-icon"><i class="fas ${produit.icone}"></i></div>
+            <h1 class="product-name">${produit.nom}</h1>
+            <div class="product-price">${produit.prix.toLocaleString()} FCFA</div>
+            <button class="btn-pay" onclick="payer()">
+                <i class="fas fa-credit-card"></i> Payer 🇸🇳
+            </button>
+            <br>
+            <a href="catalogue.html" class="back-link"><i class="fas fa-arrow-left"></i> Retour au catalogue</a>
+        `;
+
+        function payer() {
+            localStorage.setItem('commandeProduit', JSON.stringify(produit));
+            window.location.href = 'paiement.html';
+        }
+
+        document.querySelector('.menu-toggle')?.addEventListener('click', () => {
+            document.querySelector('.nav-links')?.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>!;
+
+
+
+
